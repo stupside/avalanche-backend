@@ -1,0 +1,53 @@
+name: avalanche-services
+
+services:
+  
+  avalanche-services-merchant:
+    image: avalanche/services/merchant
+    hostname: merchant.avalanche
+    container_name: merchant
+    env_file: .env
+    ports:
+      - "8001:8001"
+    build:
+      context: ../
+      dockerfile: Avalanche.Merchant.Server/Dockerfile
+    networks:
+      - authority
+      - domain
+  
+  avalanche-services-vault:
+    image: avalanche/services/vault
+    hostname: vault.avalanche
+    container_name: vault
+    env_file: .env
+    ports:
+      - "8002:8002"
+    build:
+      context: ../
+      dockerfile: Avalanche.Vault.Server/Dockerfile
+    networks:
+      - authority
+      - domain
+        
+  avalanche-services-drm:
+    image: avalanche/services/drm
+    hostname: drm.avalanche
+    container_name: drm
+    env_file: .env
+    ports:
+      - "9000:9000"
+    build:
+      context: ../
+      dockerfile: Avalanche.Drm.Server/Dockerfile
+    networks:
+      - authority
+      - domain
+
+networks:
+  authority:
+    name: avalanche-authority
+    external: true
+  domain:
+    name: avalanche-domain
+    external: true

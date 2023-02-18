@@ -1,0 +1,94 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+package avalanche.merchant.store;
+
+message CreateStoreRpc {
+
+  message Command {
+
+    string name = 1;
+    string description = 2;
+
+    string email = 3;
+  }
+
+  message Response {
+
+    string store_id = 1;
+  }
+}
+
+
+message GetOneStoreRpc {
+
+  message Request {
+
+    string store_id = 1;
+  }
+
+  message Response {
+
+    string store_id = 1;
+
+    string name = 2;
+    string description = 3;
+
+    google.protobuf.StringValue logo = 4;
+
+    string email = 5;
+  }
+}
+
+message GetManyStoresRpc {
+
+  message RequestByName {
+
+    string NameSearch = 1;
+  }
+
+  message RequestByIdentifiers {
+
+    repeated google.protobuf.StringValue Identifiers = 1;
+  }
+
+  message Response {
+
+    message Item {
+
+      string store_id = 1;
+
+      string name = 2;
+      string description = 3;
+
+      google.protobuf.StringValue logo = 4;
+    }
+
+    repeated Item items = 1;
+  }
+}
+
+message UpdateStoreRpc {
+
+  message Command {
+
+    string store_id = 1;
+
+    string description = 2;
+
+    string email = 3;
+  }
+}
+
+service StoreService {
+
+  rpc Create(CreateStoreRpc.Command) returns (CreateStoreRpc.Response);
+  rpc Update(UpdateStoreRpc.Command) returns (google.protobuf.Empty);
+
+  rpc GetOne(GetOneStoreRpc.Request) returns (GetOneStoreRpc.Response);
+
+  rpc GetManyByName(GetManyStoresRpc.RequestByName) returns (GetManyStoresRpc.Response);
+  rpc GetManyByIdentifiers(GetManyStoresRpc.RequestByIdentifiers) returns (GetManyStoresRpc.Response);
+}

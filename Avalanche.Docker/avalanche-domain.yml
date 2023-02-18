@@ -1,0 +1,46 @@
+name: avalanche-domain
+
+services:
+
+  avalanche-domain-database:
+    image: postgres
+    hostname: database.avalanche
+    container_name: database
+    restart: always
+    env_file: .env
+    ports:
+      - "5432:5432"
+  
+  avalanche-domain-database-admin:
+    image: dpage/pgadmin4
+    hostname: admin.database.avalanche
+    container_name: database-admin
+    restart: always
+    depends_on:
+      - avalanche-domain-database
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user@avalanche.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+    ports:
+      - "2345:80"
+  
+  rabbitmq:
+    image: rabbitmq:3.11.13-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "password"
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/
+      - rabbitmq:/var/log/rabbitmq/
+
+networks:
+  default:
+    name: avalanche-domain
+    driver: bridge
+
+volumes:
+  rabbitmq:    

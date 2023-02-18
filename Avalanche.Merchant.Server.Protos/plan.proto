@@ -1,0 +1,107 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/duration.proto";
+
+package avalanche.merchant.plan;
+
+
+message OrderPlanRpc {
+
+  message Command {
+
+    string plan_id = 1;
+
+    uint32 available_in_days = 2;
+  }
+}
+
+
+message GetOnePlanRpc {
+
+  message Request {
+
+    string plan_id = 1;
+  }
+
+  message Response {
+
+    string store_id = 1;
+
+    string plan_id = 2;
+
+    string name = 3;
+
+    uint32 price = 4;
+
+    bool is_free = 5;
+
+    google.protobuf.Duration duration = 6;
+  }
+}
+
+message GetManyPlansRpc {
+
+  message Request {
+
+    string store_id = 1;
+  }
+
+  message Response {
+
+    message Item {
+      
+      string plan_id = 1;
+      
+      string name = 2;
+
+      uint32 price = 3;
+
+      bool is_free = 4;
+
+      google.protobuf.Duration duration = 5;
+    }
+    
+    string store_id = 1;
+    
+    repeated Item items = 2;
+  }
+}
+
+message CreatePlanRpc {
+
+  message Command {
+
+    string store_id = 1;
+
+    string name = 2;
+
+    google.protobuf.Duration validity = 3;
+
+    uint32 price = 4;
+  }
+
+  message Response {
+
+    string plan_id = 1;
+  }
+}
+
+message DeletePlanRpc {
+
+  message Command {
+
+    string plan_id = 1;
+  }
+}
+
+service PlanService {
+
+  rpc Order(OrderPlanRpc.Command) returns (google.protobuf.Empty);
+
+  rpc Create(CreatePlanRpc.Command) returns (CreatePlanRpc.Response);
+  rpc Delete(DeletePlanRpc.Command) returns (google.protobuf.Empty);
+
+  rpc GetOne(GetOnePlanRpc.Request) returns (GetOnePlanRpc.Response);
+  rpc GetMany(GetManyPlansRpc.Request) returns (GetManyPlansRpc.Response);
+}

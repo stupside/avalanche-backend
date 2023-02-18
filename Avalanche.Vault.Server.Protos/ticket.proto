@@ -1,0 +1,70 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+
+package avalanche.vault.ticket;
+
+message GetOneTicketRpc {
+
+  message Request{
+
+    string ticket_id = 1;
+  }
+
+  message Response {
+
+    enum ValidityKind {
+      
+      EARLY = 0;
+      VALID = 1;
+      LATE = 2;
+      UNKNOWN = 3;
+    }
+
+    message Validity {
+
+      google.protobuf.Timestamp from = 1;
+      google.protobuf.Timestamp to = 2;
+
+      google.protobuf.Duration span = 3;
+
+      ValidityKind Kind = 4;
+    }
+    
+    string store_id = 1;
+    
+    string ticket_id = 2;
+
+    repeated Validity validities = 3;
+
+    bool is_valid = 4;
+  }
+}
+
+message GetManyTicketsRpc {
+
+  message Request{
+  }
+
+  message Response {
+
+    message Item {
+
+      string store_id = 1;
+      
+      string ticket_id = 2;
+
+      bool is_valid = 3;
+    }
+    
+    repeated Item items = 1;
+  }
+}
+
+service TicketService {
+  
+  rpc GetOne(GetOneTicketRpc.Request) returns (GetOneTicketRpc.Response);
+  rpc GetMany(GetManyTicketsRpc.Request) returns (GetManyTicketsRpc.Response);
+}
