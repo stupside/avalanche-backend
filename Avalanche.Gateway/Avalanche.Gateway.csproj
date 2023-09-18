@@ -23,4 +23,5 @@
       <ProjectReference Include="..\Avalanche.Identity.Client\Avalanche.Identity.Client.csproj" />
     </ItemGroup>
 
+
 </Project>

@@ -2,7 +2,7 @@ name: avalanche-domain
 
 services:
 
-  avalanche-domain-database:
+  database:
     image: postgres
     hostname: database.avalanche
     container_name: database
@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
   
-  avalanche-domain-database-admin:
+  database-admin:
     image: dpage/pgadmin4
     hostname: admin.database.avalanche
     container_name: database-admin
@@ -22,7 +22,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: "user@avalanche.com"
       PGADMIN_DEFAULT_PASSWORD: "password"
     ports:
-      - "2345:80"
+      - "2345:2345"
   
   rabbitmq:
     image: rabbitmq:3.11.13-management-alpine

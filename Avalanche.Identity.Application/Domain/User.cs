@@ -6,6 +6,5 @@ public class User
 
     public required string Username { get; init; }
 
-    public Guid UserCredentialId { get; init; }
-    public UserCredential? UserCredential { get; init; }
+    public required string Hash { get; set; }
 }

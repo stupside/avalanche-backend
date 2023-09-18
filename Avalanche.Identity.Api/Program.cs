@@ -11,8 +11,8 @@ var assembly = Assembly.GetExecutingAssembly();
 
 AvalancheApplication.New(args, builder =>
 {
-    var oidc = builder.Configuration.GetSection(AvalancheOidcConfiguration.AvalancheOidcConfigurationKey)
-        .Get<AvalancheOidcConfiguration>();
+    var oidc = builder.Configuration.GetSection(OidcConfiguration.AvalancheOidcConfigurationKey)
+        .Get<OidcConfiguration>();
 
     if (oidc is null)
         throw new Exception();
@@ -20,7 +20,7 @@ AvalancheApplication.New(args, builder =>
     builder.Services.AddRouting();
 
     builder.Services.AddOpenIddict()
-        .AddCore(options => { options.UseEntityFrameworkCore(m => { m.UseDbContext<AvalancheIdentityContext>(); }); })
+        .AddCore(options => { options.UseEntityFrameworkCore(m => { m.UseDbContext<IdentityContext>(); }); })
         .AddServer(options =>
         {
             if (oidc.Issuer is not null)
@@ -91,7 +91,7 @@ AvalancheApplication.New(args, builder =>
 
     builder.UseAvalancheApi();
 
-    builder.Services.AddDbContext<AvalancheIdentityContext>(m =>
+    builder.Services.AddDbContext<IdentityContext>(m =>
     {
         var connectionString = builder.Configuration.GetConnectionString("Npgsql");
 
@@ -117,7 +117,7 @@ AvalancheApplication.New(args, builder =>
     {
         using var scope = application.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-        using var context = scope.ServiceProvider.GetService<AvalancheIdentityContext>();
+        using var context = scope.ServiceProvider.GetService<IdentityContext>();
 
         context?.Database.Migrate();
     }

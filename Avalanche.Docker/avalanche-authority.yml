@@ -2,22 +2,20 @@ name: avalanche-authority
 
 services:
   
-  avalanche-authority-gateway:
+  authority-gateway:
     image: avalanche/authority/gateway
     hostname: gateway.avalanche
     container_name: gateway
     restart: always
     ports:
-      - "5000:5000"
-      - "5001:5001"
-      - "5002:5002"
+      - "80:80"
     build:
       context: ../
       dockerfile: Avalanche.Gateway/Dockerfile
     networks:
       - authority
       
-  avalanche-authority-identity:
+  authority-identity:
     image: avalanche/authority/identity
     hostname: identity.avalanche
     container_name: identity

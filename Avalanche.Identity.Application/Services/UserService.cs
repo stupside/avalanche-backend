@@ -7,9 +7,9 @@ namespace Avalanche.Identity.Application.Services;
 
 public class UserService : IUserService
 {
-    private readonly AvalancheIdentityContext _context;
+    private readonly IdentityContext _context;
 
-    public UserService(AvalancheIdentityContext context)
+    public UserService(IdentityContext context)
     {
         _context = context;
     }
@@ -27,10 +27,7 @@ public class UserService : IUserService
         var user = new User
         {
             Username = username.Trim(),
-            UserCredential = new UserCredential
-            {
-                Hash = PasswordHash.ArgonHashString(password.Trim(), PasswordHash.StrengthArgon.Medium)
-            }
+            Hash = PasswordHash.ArgonHashString(password.Trim(), PasswordHash.StrengthArgon.Medium)
         };
 
         var entry = await _context.Users.AddAsync(user);
@@ -40,13 +37,8 @@ public class UserService : IUserService
         return entry.Entity.Id;
     }
 
-    public async Task<bool> VerifyAsync(User user, string password)
+    public Task<bool> VerifyAsync(User user, string password)
     {
-        var credential = user.UserCredential ??
-                         await _context.UserCredentials.SingleOrDefaultAsync(m => m.Id == user.UserCredentialId);
-
-        if (credential is null) return false;
-
-        return PasswordHash.ArgonHashStringVerify(credential.Hash, password.Trim());
+        return Task.FromResult(PasswordHash.ArgonHashStringVerify(user.Hash, password.Trim()));
     }
 }

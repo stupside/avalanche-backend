@@ -1,0 +1,28 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package avalanche.drm.auth;
+
+message ConnectRpc {
+  
+  message Command {
+    
+    string correlation_id = 1;
+  }
+
+  message Response {
+    
+    string record_id = 1;
+    string user_id = 2;
+
+    bool success = 3;
+
+    google.protobuf.StringValue message = 4;
+  }
+}
+
+service AuthService {
+  
+  rpc Connect(stream ConnectRpc.Command) returns (stream ConnectRpc.Response);
+}

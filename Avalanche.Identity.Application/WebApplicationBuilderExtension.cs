@@ -10,13 +10,13 @@ public static class WebApplicationBuilderExtension
 {
     public static void UseAvalancheIdentity(this WebApplicationBuilder builder)
     {
-        builder.Services.AddHostedService<AvalancheIdentitySeed>();
+        builder.Services.AddHostedService<IdentitySeed>();
 
         builder.Services.AddScoped<IUserService, UserService>();
 
         builder.Services.UseAvalanche(m => { m.UseFeatures(typeof(WebApplicationBuilderExtension).Assembly); });
 
-        builder.Services.Configure<AvalancheOidcConfiguration>(
-            builder.Configuration.GetSection(AvalancheOidcConfiguration.AvalancheOidcConfigurationKey));
+        builder.Services.Configure<OidcConfiguration>(
+            builder.Configuration.GetSection(OidcConfiguration.AvalancheOidcConfigurationKey));
     }
 }

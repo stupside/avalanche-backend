@@ -10,10 +10,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(m => m.Id);
 
         builder.HasIndex(m => m.Username).IsUnique();
-
-        builder.HasOne(m => m.UserCredential)
-            .WithOne()
-            .HasForeignKey<User>(m => m.UserCredentialId)
-            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Property(m => m.Hash).IsRequired();
     }
 }

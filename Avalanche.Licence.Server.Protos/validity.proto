@@ -1,0 +1,45 @@
+﻿syntax = "proto3";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+package avalanche.ticket.validity;
+
+message Challenge {
+
+  message Request {
+
+    string organization_id = 1;
+    string user_id = 2;
+  }
+
+  message Response {
+
+    enum ValidityKind {
+
+      EARLY = 0;
+      VALID = 1;
+      LATE = 2;
+      UNKNOWN = 3;
+    }
+
+    message Validity {
+
+      google.protobuf.Timestamp from = 1;
+      google.protobuf.Timestamp to = 2;
+
+      google.protobuf.Duration span = 3;
+
+      ValidityKind Kind = 4;
+    }
+
+    repeated Validity validities = 1;
+
+    bool is_valid = 2;
+  }
+}
+
+service ValidityService {
+  
+  rpc Challenge(Challenge.Request) returns (Challenge.Response);
+}

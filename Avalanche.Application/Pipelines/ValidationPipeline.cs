@@ -18,6 +18,7 @@ public class ValidationPipeline<TRequest> : IRequestPreProcessor<TRequest> where
         IEnumerable<ValidationFailure> failures = new List<ValidationFailure>();
 
         var failed = false;
+
         foreach (var validator in _validators.ToArray())
         {
             var result = await validator.ValidateAsync(request, cancellationToken);
